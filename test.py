@@ -12,19 +12,22 @@ def main():
         return
 
     tool = sys.argv[1]
+    count = int(sys.argv[2]) if len(sys.argv) > 2 else 1
 
-    if tool == "icmp":
-        result = test_icmp()
+    if tool == "all":
+        test_connectivity(count)
+    elif tool == "icmp":
+        result = test_icmp(count)
         print("ICMP:", "OK" if result else "FAIL")
     elif tool == "dns":
-        result = test_dns()
+        result = test_dns(count)
         print("DNS :", "OK" if result else "FAIL")
     elif tool == "tcp":
-        result = test_tcp()
+        result = test_tcp(count)
         print("TCP :", "OK" if result else "FAIL")
     else:
         print(f"Error: Unknown tool '{tool}'")
-        print("Available: icmp, dns, tcp")
+        print("Available: all, icmp, dns, tcp")
         sys.exit(1)
 
 
