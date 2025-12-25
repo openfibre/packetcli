@@ -1,39 +1,31 @@
 #!/usr/bin/env python3
 import sys
-from src.icmp import main as icmp_main
-from src.dns import main as dns_main
-from src.tcp import main as tcp_main
-from src.all import main as all_main
-
-
-TOOLS = {
-    "icmp": icmp_main,
-    "dns": dns_main,
-    "tcp": tcp_main,
-    "all": all_main
-}
+from src.core import test_connectivity
+from src.icmp import test_icmp
+from src.dns import test_dns
+from src.tcp import test_tcp
 
 
 def main():
     if len(sys.argv) < 2:
-        print("PacketCLI - Network Testing Tools")
-        print("Usage: python test.py <tool> [options]")
-        print("\nAvailable Tools:")
-        for tool in TOOLS:
-            print(f"  {tool}")
-        sys.exit(1)
+        test_connectivity()
+        return
 
     tool = sys.argv[1]
 
-    if tool not in TOOLS:
+    if tool == "icmp":
+        result = test_icmp()
+        print("ICMP:", "OK" if result else "FAIL")
+    elif tool == "dns":
+        result = test_dns()
+        print("DNS :", "OK" if result else "FAIL")
+    elif tool == "tcp":
+        result = test_tcp()
+        print("TCP :", "OK" if result else "FAIL")
+    else:
         print(f"Error: Unknown tool '{tool}'")
-        print(f"Available tools: {', '.join(TOOLS.keys())}")
+        print("Available: icmp, dns, tcp")
         sys.exit(1)
-
-    # Replace tool name with script name for argparse
-    sys.argv[0] = f"python test.py {tool}"
-    sys.argv.pop(1)
-    TOOLS[tool]()
 
 
 if __name__ == "__main__":
